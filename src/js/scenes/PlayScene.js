@@ -1,6 +1,6 @@
 var PlayScene = function() {
 
-  Phaser.Scene.call(this, 'playGame');
+  Phaser.Scene.call(this, { key: 'playGame' } );
 
   this.customProps = {};
 
@@ -11,16 +11,14 @@ PlayScene.prototype.constructor = PlayScene;
 
 PlayScene.prototype.create = function() {
 
-  this.customProps.graphics = this.add.graphics({
-    lineStyle: { color: 0x00ff00 }
-  });
-
-  //this.add.text(20, 20, "Playing the game now");
-
-  this.customProps.circles = [];
-
-  for (var y = 1; y < 5; y++) {
-    for (var x = 1; x < 6; x++) {
+  this.customProps = {
+    graphics: this.add.graphics({ lineStyle: { color: 0x00ff00 } }),
+    circles: [],
+    intersecting: []
+  };
+  var x, y;
+  for (y = 0; y < 3; y++) {
+    for (x = 0; x < 4; x++) {
 
       this.customProps.circles.push({
         geom: new Phaser.Geom.Circle(x*120, y*120, 120),
@@ -30,47 +28,62 @@ PlayScene.prototype.create = function() {
     }
   }
 
-  var self = this;
-  this.input.on('pointerdown', function(pointer) {
+  var tiles = {};
 
-    for (var i = 0; i < self.customProps.circles.length; i++) {
+  for (y = -1; y < 8; y++) {
+    for (x = -1; x < 8; x++) {
 
-      var geom = self.customProps.circles[i].geom;
+      addTile(this, tiles, x*120, y*120, 60, 60, 'square', 0);
 
-      if (Math.sqrt(Math.pow(geom.x - pointer.x, 2) + Math.pow(geom.y - pointer.y, 2)) < geom.radius) {
-        self.customProps.circles[i].selected = true;
-      }
-      else {
-        self.customProps.circles[i].selected = false;
-      }
+      addTile(this, tiles, x*120, y*120, 60, 120, 'diamond', 0);
+      addTile(this, tiles, x*120, y*120, 120, 60, 'diamond', Math.PI/2);
+
+      addTile(this, tiles, x*120, y*120, 150, 30, 'triangle', 0);
+      addTile(this, tiles, x*120, y*120, 150, 90, 'triangle', -Math.PI/2);
+      addTile(this, tiles, x*120, y*120, 90, 30, 'triangle', Math.PI/2);
+      addTile(this, tiles, x*120, y*120, 90, 90, 'triangle', Math.PI);
+
     }
-  });
+  }
+
+  //addTile(this, tiles, 0, 0, 60, 60, 'square', 0);
+  //this.add.image(60, 60, 'square');
+  //this.add.image(180, 60, 'square');
+  //this.add.image(60, 180, 'square');
+  //this.add.image(180, 180, 'square');
+
+  //this.add.image(60, 120, 'diamond');
+  //this.add.image(180, 120, 'diamond');
+  //this.add.image(120, 60, 'diamond').rotation = Math.PI/2;
+  //this.add.image(120, 180, 'diamond').rotation = Math.PI/2;
+
+  /*this.add.image(150, 30, 'triangle');
+  this.add.image(150, 90, 'triangle').rotation = -Math.PI/2;
+  this.add.image(90, 30, 'triangle').rotation = Math.PI/2;
+  this.add.image(90, 90, 'triangle').rotation = Math.PI;
+  this.add.image(90, 150, 'triangle').rotation = Math.PI/2;
+  this.add.image(90, 210, 'triangle').rotation = Math.PI;
+  this.add.image(150, 150, 'triangle');
+  this.add.image(150, 210, 'triangle').rotation = -Math.PI/2;
+  this.add.image(30, 90, 'triangle').rotation = -Math.PI/2;
+  this.add.image(30, 150, 'triangle');
+
+  this.add.image(210, 90, 'triangle').rotation = Math.PI;
+  this.add.image(210, 150, 'triangle').rotation = Math.PI/2;*/
 
 };
 
-PlayScene.prototype.update = function() {
+var addTile = function(game, tiles, x, y, tileX, tileY, type, rotation) {
 
-  this.customProps.graphics.clear();
+  var newX = x + tileX;
+  var newY = y + tileY;
 
-  this.customProps.graphics.lineStyle(1, 0xff0000);
-  //this.customProps.graphics.beginPath();
-
-  var geom, i;
-  for (i = 0; i < this.customProps.circles.length; i++) {
-
-    geom = this.customProps.circles[i].geom;
-
-    if (this.customProps.circles[i].selected) {
-      this.customProps.graphics.lineStyle(1, 0xff0000);
-    }
-    else {
-      this.customProps.graphics.lineStyle(1, 0x00ff00);
-    }
-
-    //this.customProps.graphics.moveTo(geom.x, geom.y);
-    //this.customProps.graphics.arc(geom.x, geom.y, geom.radius, 0, 2*Math.PI);
-    this.customProps.graphics.strokeCircleShape(geom);
+  if (tiles[newX + '_' + newY]) {
+    console.log('already exists');
   }
-
+  else {
+    tiles[newX + '_' + newY] = game.add.image(newX, newY, type);
+    tiles[newX + '_' + newY].rotation = rotation;
+  }
 
 };
