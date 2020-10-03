@@ -1,5 +1,7 @@
 
-
+var g_game = {
+  tint: 0xffffff
+};
 
 function initGame() {
 

@@ -46,30 +46,58 @@ PlayScene.prototype.create = function() {
     }
   }
 
-  //addTile(this, tiles, 0, 0, 60, 60, 'square', 0);
-  //this.add.image(60, 60, 'square');
-  //this.add.image(180, 60, 'square');
-  //this.add.image(60, 180, 'square');
-  //this.add.image(180, 180, 'square');
+  var colors = [
+    0x000000,
+    0x222034,
+    0x45283c,
+    0x663931,
+    0x8f563b,
+    0xdf7126,
+    0xd9a066,
+    0xeec39a,
+    0xfbf236,
+    0x99e550,
+    0x6abe30,
+    0x37946e,
+    0x4b692f,
+    0x524b24,
+    0x323c39,
+    0x3f3f74,
+    0x306082,
+    0x5b6ee1,
+    0x639bff,
+    0x5fcde4,
+    0xcbdbfc,
+    0xffffff,
+    0x9badb7,
+    0x847e87,
+    0x696a6a,
+    0x595652,
+    0x76428a,
+    0xac3232,
+    0xd96763,
+    0xd77bba,
+    0x8f974a,
+    0x8a6f30
+  ];
 
-  //this.add.image(60, 120, 'diamond');
-  //this.add.image(180, 120, 'diamond');
-  //this.add.image(120, 60, 'diamond').rotation = Math.PI/2;
-  //this.add.image(120, 180, 'diamond').rotation = Math.PI/2;
+  function setTint(pointer) {
+      g_game.tint = this.custTint;
+  }
 
-  /*this.add.image(150, 30, 'triangle');
-  this.add.image(150, 90, 'triangle').rotation = -Math.PI/2;
-  this.add.image(90, 30, 'triangle').rotation = Math.PI/2;
-  this.add.image(90, 90, 'triangle').rotation = Math.PI;
-  this.add.image(90, 150, 'triangle').rotation = Math.PI/2;
-  this.add.image(90, 210, 'triangle').rotation = Math.PI;
-  this.add.image(150, 150, 'triangle');
-  this.add.image(150, 210, 'triangle').rotation = -Math.PI/2;
-  this.add.image(30, 90, 'triangle').rotation = -Math.PI/2;
-  this.add.image(30, 150, 'triangle');
+  for (var i = 0; i < colors.length; i++) {
 
-  this.add.image(210, 90, 'triangle').rotation = Math.PI;
-  this.add.image(210, 150, 'triangle').rotation = Math.PI/2;*/
+    x = this.sys.game.scale.gameSize.width - 24*(1 + i%2);
+    y = 16 + Math.floor(i / 2) * 20;
+
+    var tile = this.add.image(x, y, 'tile')
+      .setTint(colors[i])
+      .setInteractive()
+      .on('pointerdown', setTint);
+    tile.custTint = colors[i];
+
+  }
+
 
 };
 
@@ -77,13 +105,19 @@ var addTile = function(game, tiles, x, y, tileX, tileY, type, rotation) {
 
   var newX = x + tileX;
   var newY = y + tileY;
+  var name = newX + '_' + newY;
 
-  if (tiles[newX + '_' + newY]) {
+  if (tiles[name]) {
     console.log('already exists');
   }
   else {
-    tiles[newX + '_' + newY] = game.add.image(newX, newY, type);
-    tiles[newX + '_' + newY].rotation = rotation;
+    tiles[name] = game.add.image(newX, newY, type);
+    tiles[name].rotation = rotation;
+    tiles[name].setInteractive({ pixelPerfect: true });
+    tiles[name].setTint(0x000000);
+    tiles[name].on('pointerdown', function (pointer) {
+        this.setTint(g_game.tint);
+    });
   }
 
 };

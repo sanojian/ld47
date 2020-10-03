@@ -12,6 +12,7 @@ BootScene.prototype.preload = function() {
   this.load.image('square', 'assets/gfx/square.png');
   this.load.image('triangle', 'assets/gfx/triangle.png');
   this.load.image('diamond', 'assets/gfx/diamond.png');
+  this.load.image('tile', 'assets/gfx/tile.png');
 
 };
 
