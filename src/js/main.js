@@ -9,7 +9,7 @@ function initGame() {
     parent: 'gameDiv',
     width: window.innerWidth,
     height: window.innerHeight,
-    scene: [BootScene, PlayScene, PaletteScene],
+    scene: [BootScene, SplashScene, PlayScene, PaletteScene],
     backgroundColor: 0x333333,
     dom: {
       createContainer: true
