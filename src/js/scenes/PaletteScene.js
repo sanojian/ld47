@@ -88,9 +88,10 @@ PaletteScene.prototype.create = function() {
     }
     else {
       g_game.chatForm.alpha = 1;
-      g_game.chatForm.setFocus();
-      g_game.chatForm.scene.time.delayedCall(500, function() {
-        this.setFocus();
+      // has to delay for some reason before focus
+      g_game.chatForm.scene.time.delayedCall(50, function() {
+        this.node.focus();
+        // this.setFocus();
       }, null, g_game.chatForm);
 
       //document.getElementById('chatForm').focus();
