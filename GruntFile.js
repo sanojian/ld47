@@ -5,6 +5,11 @@ module.exports = function(grunt) {
 
 	// Project configuration.
 	grunt.initConfig({
+    develop: {
+      server: {
+        file: './server/server.js'
+      }
+    },
 		watch: {
 			scripts: {
 				files: [
@@ -12,13 +17,6 @@ module.exports = function(grunt) {
 					'src/html/index.html'
 				],
 				tasks: ['jshint','concat']
-			}
-		},
-		'http-server': {
-			dev: {
-				root: '',
-				port: 3119,
-				runInBackground: true
 			}
 		},
 		jshint: {
@@ -50,10 +48,12 @@ module.exports = function(grunt) {
 	// These plugins provide necessary tasks.
 	grunt.loadNpmTasks('grunt-contrib-watch');
 	//grunt.loadNpmTasks('grunt-ssh');
-	grunt.registerTask('dev', [
+  grunt.registerTask('server', [
+		'develop:server',
 		'watch'
 	]);
+
 	grunt.registerTask('build', ['clean', 'jshint', 'concat', 'copy']);
-	grunt.registerTask('default', ['build', 'http-server', 'dev']);
+	grunt.registerTask('default', ['build', 'server']);
 
 };

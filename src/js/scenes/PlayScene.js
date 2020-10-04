@@ -14,26 +14,13 @@ PlayScene.prototype.create = function() {
   this.cameras.main.setBounds(0, 0, 4000, 4000);
 
   this.customProps = {
-    graphics: this.add.graphics({ lineStyle: { color: 0x00ff00 } }),
-    circles: [],
-    intersecting: []
+    graphics: this.add.graphics({ lineStyle: { color: 0x00ff00 } })
   };
-  var x, y;
-  for (y = 0; y < 3; y++) {
-    for (x = 0; x < 4; x++) {
-
-      this.customProps.circles.push({
-        geom: new Phaser.Geom.Circle(x*120, y*120, 120),
-        selected: false
-      });
-
-    }
-  }
 
   var tiles = {};
 
-  for (y = -1; y < Math.ceil(this.sys.game.scale.gameSize.width / 120); y++) {
-    for (x = -1; x < Math.ceil(this.sys.game.scale.gameSize.width / 120); x++) {
+  for (y = -1; y < Math.ceil(4000 / 120); y++) {
+    for (x = -1; x < Math.ceil(4000 / 120); x++) {
 
       addTile(this, tiles, x*120, y*120, 60, 60, 'square', 0);
 
@@ -48,6 +35,7 @@ PlayScene.prototype.create = function() {
     }
   }
 
+  g_game.tiles = tiles;
 
   var controlConfig = {
         camera: this.cameras.main,
@@ -57,12 +45,17 @@ PlayScene.prototype.create = function() {
         down: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.S),
         zoomIn: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.Q),
         zoomOut: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.E),
-        acceleration: 0.06,
-        drag: 0.0005,
-        maxSpeed: 1.0
+        acceleration: 0.4,
+        drag: 0.01,
+        maxSpeed: 2.0
     };
 
     this.customProps.controls = new Phaser.Cameras.Controls.SmoothedKeyControl(controlConfig);
+
+
+    initNetworking(function() {
+
+    });
 
 };
 
@@ -82,6 +75,7 @@ var addTile = function(game, tiles, x, y, tileX, tileY, type, rotation) {
     tiles[name].setTint(0x000000);
     tiles[name].on('pointerdown', function (pointer) {
         this.setTint(g_game.tint);
+        gameSocket.emit('color', { id: name, tint: g_game.tint });
     });
   }
 
