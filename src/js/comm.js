@@ -45,23 +45,9 @@ function initNetworking(callback) {
 
 	gameSocket.on('chat', function(data) {
 
-    console.log(data);
-
     var chatText = g_game.chatText.get();
     chatText.showText(data.x, data.y, data.message);
-    
-    /*var txt = g_game.chatTextGroup.getFirstDead();
-    if (txt) {
-			g_game.audio.chat.play();
-      txt.text = data.message + ' ';
-      txt.customProps.player = data.id;
-      txt.reset();
-      var timer = g_game.phaserGame.time.create();
-      timer.add(Phaser.Timer.SECOND * 5, function() {
-        txt.kill();
-      }, this);
-      timer.start();
-    }*/
+
   });
 
 	gameSocket.on('disconnect', function() {

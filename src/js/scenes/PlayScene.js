@@ -37,35 +37,22 @@ PlayScene.prototype.create = function() {
 
   g_game.tiles = tiles;
 
-  /*var cursors = this.input.keyboard.createCursorKeys();
-  var controlConfig = {
-        camera: this.cameras.main,
-        left: cursors.left,
-        right: cursors.right,
-        up: cursors.up,
-        down: cursors.down,
-        zoomIn: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.Q),
-        zoomOut: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.E),
-        acceleration: 0.4,
-        drag: 0.01,
-        maxSpeed: 2.0
-    };
+  g_game.chatText = this.add.group({
+    classType: ChatText,
+    maxSize: 16,
+    runChildUpdate: true
+  });
 
-    this.customProps.controls = new Phaser.Cameras.Controls.SmoothedKeyControl(controlConfig);
-    */
-    g_game.chatText = this.add.group({
-      classType: ChatText,
-      maxSize: 16,
-      runChildUpdate: true
-    });
+  // scroll to middle of world
+  this.cameras.main.setScroll(2000, 2000);
 
-    initNetworking(function() {
+  initNetworking(function() {
 
-    });
+  });
 
 };
 
-var addTile = function(game, tiles, x, y, tileX, tileY, type, rotation) {
+var addTile = function(scene, tiles, x, y, tileX, tileY, type, rotation) {
 
   var newX = x + tileX;
   var newY = y + tileY;
@@ -75,20 +62,46 @@ var addTile = function(game, tiles, x, y, tileX, tileY, type, rotation) {
     console.log('already exists');
   }
   else {
-    tiles[name] = game.add.image(newX, newY, type);
-    tiles[name].rotation = rotation;
-    tiles[name].setInteractive({ pixelPerfect: true });
-    tiles[name].setTint(0x000000);
-    tiles[name].on('pointerdown', function (pointer) {
+    var tile = scene.add.image(newX, newY, type);
+    tile.rotation = rotation;
+    tile.setInteractive({ pixelPerfect: true });
+    tile.setTint(0x000000);
+    tile.on('pointerdown', function (pointer) {
+      g_game.dragStartX = pointer.x;
+      g_game.dragStartY = pointer.y;
+      g_game.camStartX = scene.cameras.main.scrollX;
+      g_game.camStartY = scene.cameras.main.scrollY;
+      g_game.isDragging = true;
+    });
+    tile.on('pointerup', function (pointer) {
+      g_game.isDragging = false;
+
+      var dx = scene.input.activePointer.x - g_game.dragStartX;
+      var dy = scene.input.activePointer.y - g_game.dragStartY;
+
+      // click or drag?
+      if (Math.abs(dx) + Math.abs(dy) < 10) {
         this.setTint(g_game.tint);
         gameSocket.emit('color', { id: name, tint: g_game.tint });
+      }
     });
+
+    tiles[name] = tile;
   }
 
 };
 
 PlayScene.prototype.update = function(time, delta) {
 
-  //this.customProps.controls.update(delta);
+
+  if (g_game.isDragging) {
+    // disance
+    var dx = this.input.activePointer.x - g_game.dragStartX;
+    var dy = this.input.activePointer.y - g_game.dragStartY;
+
+    // position camera
+    this.cameras.main.setScroll(g_game.camStartX - dx, g_game.camStartY - dy);
+
+  }
 
 };
