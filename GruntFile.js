@@ -23,7 +23,7 @@ module.exports = function(grunt) {
 			options: {
 				evil: true
 			},
-			all: ['src/js/**/*.js']
+			all: ['src/js/**/*.js', '!src/js/lib/**.*js']
 		},
     clean: ['dist/'],
     copy: {
@@ -38,7 +38,6 @@ module.exports = function(grunt) {
 			basic_and_extras: {
 				files: {
 					'dist/js/index.js': ['src/js/main.js', 'src/js/**/*.js'],
-					'dist/chatForm.html': ['src/html/chatForm.html'],
 					'dist/index.html': ['src/html/index.html']
 				}
 			}

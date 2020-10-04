@@ -37,7 +37,7 @@ PlayScene.prototype.create = function() {
 
   g_game.tiles = tiles;
 
-  var cursors = this.input.keyboard.createCursorKeys();
+  /*var cursors = this.input.keyboard.createCursorKeys();
   var controlConfig = {
         camera: this.cameras.main,
         left: cursors.left,
@@ -52,7 +52,7 @@ PlayScene.prototype.create = function() {
     };
 
     this.customProps.controls = new Phaser.Cameras.Controls.SmoothedKeyControl(controlConfig);
-
+    */
     g_game.chatText = this.add.group({
       classType: ChatText,
       maxSize: 16,
@@ -89,6 +89,6 @@ var addTile = function(game, tiles, x, y, tileX, tileY, type, rotation) {
 
 PlayScene.prototype.update = function(time, delta) {
 
-  this.customProps.controls.update(delta);
+  //this.customProps.controls.update(delta);
 
 };

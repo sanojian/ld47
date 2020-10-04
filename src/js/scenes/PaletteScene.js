@@ -7,6 +7,11 @@ var PaletteScene = function() {
 PaletteScene.prototype = Object.create(Phaser.Scene.prototype);
 PaletteScene.prototype.constructor = PaletteScene;
 
+PaletteScene.prototype.preload = function() {
+
+  this.load.plugin('rexinputtextplugin', 'https://raw.githubusercontent.com/rexrainbow/phaser3-rex-notes/master/dist/rexinputtextplugin.min.js', true);
+};
+
 PaletteScene.prototype.create = function() {
 
   var colors = [
@@ -49,8 +54,22 @@ PaletteScene.prototype.create = function() {
 
   }
 
-  g_game.chatForm = this.add.dom(this.sys.game.scale.gameSize.width/2, this.sys.game.scale.gameSize.height - 64).createFromCache('chatForm');
+  //g_game.chatForm = this.add.dom(this.sys.game.scale.gameSize.width/2, this.sys.game.scale.gameSize.height - 64).createFromCache('chatForm');
+  g_game.chatForm = this.add.rexInputText(
+    this.sys.game.scale.gameSize.width/2,
+    this.sys.game.scale.gameSize.height - 64,
+    512,
+    48,
+    {
+      placeholder: 'chat here',
+      backgroundColor: '#cbdbfc',
+      color: '#45283c',
+      fontFamily: 'Conv_ladybug px',
+      fontSize: 20
+    }
+  );
   g_game.chatForm.alpha = 0;
+
 
   var self = this;
 
@@ -60,15 +79,21 @@ PaletteScene.prototype.create = function() {
     if (g_game.textInputMode) {
       g_game.textInputMode = false;
       g_game.chatForm.alpha = 0;
-      var text = document.getElementById('chatForm').value;
-      if (text) {
-        gameSocket.emit('chat', { x: self.input.activePointer.worldX, y: self.input.activePointer.worldY, message: text });
-        document.getElementById('chatForm').value = '';
+      g_game.chatForm.setBlur();
+
+      if (g_game.chatForm.text) {
+        gameSocket.emit('chat', { x: self.input.activePointer.worldX, y: self.input.activePointer.worldY, message: g_game.chatForm.text });
+        g_game.chatForm.setText('');
       }
     }
     else {
       g_game.chatForm.alpha = 1;
-      document.getElementById('chatForm').focus();
+      g_game.chatForm.setFocus();
+      g_game.chatForm.scene.time.delayedCall(500, function() {
+        this.setFocus();
+      }, null, g_game.chatForm);
+
+      //document.getElementById('chatForm').focus();
       g_game.textInputMode = true;
     }
   });

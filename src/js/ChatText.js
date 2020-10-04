@@ -4,13 +4,12 @@ var ChatText = function(scene) {
   var style = {
     font: "16px 'Conv_ladybug px'",
     fill: "#fbf236",
-    wordWrap: true,
-    wordWrapWidth: 96,
     align: "center",
     backgroundColor: "#3f3f74"
   };
 
-  Phaser.GameObjects.Text.call(this, scene, 0, 0, 'test text', style);
+  Phaser.GameObjects.Text.call(this, scene, 0, 0, '', style);
+  this.setOrigin(0.5, 1);
 };
 
 ChatText.prototype = Object.create(Phaser.GameObjects.Text.prototype);
@@ -22,7 +21,7 @@ ChatText.prototype.showText = function(x, y, text) {
   this.setActive(true);
   this.setVisible(true);
 
-  this.scene.time.delayedCall(1000 + text.length * 200, function() {
+  this.scene.time.delayedCall(1000 + text.length * 400, function() {
     this.setActive(false);
     this.setVisible(false);
   }, null, this);
