@@ -48,4 +48,28 @@ PaletteScene.prototype.create = function() {
     tile.custSelected = i;
 
   }
+
+  g_game.chatForm = this.add.dom(this.sys.game.scale.gameSize.width/2, this.sys.game.scale.gameSize.height - 64).createFromCache('chatForm');
+  g_game.chatForm.alpha = 0;
+
+  var self = this;
+
+  var keyObj = this.input.keyboard.addKey('ENTER');
+  keyObj.on('down', function(event) {
+
+    if (g_game.textInputMode) {
+      g_game.textInputMode = false;
+      g_game.chatForm.alpha = 0;
+      var text = document.getElementById('chatForm').value;
+      if (text) {
+        gameSocket.emit('chat', { x: self.input.activePointer.worldX, y: self.input.activePointer.worldY, message: text });
+        document.getElementById('chatForm').value = '';
+      }
+    }
+    else {
+      g_game.chatForm.alpha = 1;
+      document.getElementById('chatForm').focus();
+      g_game.textInputMode = true;
+    }
+  });
 };

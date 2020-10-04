@@ -15,6 +15,7 @@ BootScene.prototype.preload = function() {
   this.load.image('tile', 'assets/gfx/tile.png');
   this.load.image('selection', 'assets/gfx/selected.png');
 
+  this.load.html('chatForm', 'chatForm.html');
 };
 
 

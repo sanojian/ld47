@@ -14,7 +14,7 @@ module.exports = function(grunt) {
 			scripts: {
 				files: [
 					'src/js/**/*.js',
-					'src/html/index.html'
+					'src/html/*.html'
 				],
 				tasks: ['jshint','concat']
 			}
@@ -38,6 +38,7 @@ module.exports = function(grunt) {
 			basic_and_extras: {
 				files: {
 					'dist/js/index.js': ['src/js/main.js', 'src/js/**/*.js'],
+					'dist/chatForm.html': ['src/html/chatForm.html'],
 					'dist/index.html': ['src/html/index.html']
 				}
 			}

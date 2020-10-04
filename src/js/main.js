@@ -6,10 +6,14 @@ var g_game = {
 function initGame() {
 
   var config = {
+    parent: 'gameDiv',
     width: window.innerWidth,
     height: window.innerHeight,
     scene: [BootScene, PlayScene, PaletteScene],
-    backgroundColor: 0x333333
+    backgroundColor: 0x333333,
+    dom: {
+      createContainer: true
+    }
   };
 
   var game = new Phaser.Game(config);

@@ -37,12 +37,13 @@ PlayScene.prototype.create = function() {
 
   g_game.tiles = tiles;
 
+  var cursors = this.input.keyboard.createCursorKeys();
   var controlConfig = {
         camera: this.cameras.main,
-        left: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.A),
-        right: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.D),
-        up: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.W),
-        down: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.S),
+        left: cursors.left,
+        right: cursors.right,
+        up: cursors.up,
+        down: cursors.down,
         zoomIn: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.Q),
         zoomOut: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.E),
         acceleration: 0.4,
@@ -52,6 +53,11 @@ PlayScene.prototype.create = function() {
 
     this.customProps.controls = new Phaser.Cameras.Controls.SmoothedKeyControl(controlConfig);
 
+    g_game.chatText = this.add.group({
+      classType: ChatText,
+      maxSize: 16,
+      runChildUpdate: true
+    });
 
     initNetworking(function() {
 

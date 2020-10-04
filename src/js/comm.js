@@ -45,11 +45,12 @@ function initNetworking(callback) {
 
 	gameSocket.on('chat', function(data) {
 
-		if (data.room != g_game.currentMap.name) {
-			return;
-		}
+    console.log(data);
 
-    var txt = g_game.chatTextGroup.getFirstDead();
+    var chatText = g_game.chatText.get();
+    chatText.showText(data.x, data.y, data.message);
+    
+    /*var txt = g_game.chatTextGroup.getFirstDead();
     if (txt) {
 			g_game.audio.chat.play();
       txt.text = data.message + ' ';
@@ -60,7 +61,7 @@ function initNetworking(callback) {
         txt.kill();
       }, this);
       timer.start();
-    }
+    }*/
   });
 
 	gameSocket.on('disconnect', function() {
