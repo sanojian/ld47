@@ -6,9 +6,9 @@ var g_game = {
 function initGame() {
 
   var config = {
-    width: 800,
-    height: 600,
-    scene: [BootScene, PlayScene],
+    width: window.innerWidth,
+    height: window.innerHeight,
+    scene: [BootScene, PlayScene, PaletteScene],
     backgroundColor: 0x333333
   };
 

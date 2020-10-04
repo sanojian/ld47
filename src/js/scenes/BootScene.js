@@ -13,6 +13,7 @@ BootScene.prototype.preload = function() {
   this.load.image('triangle', 'assets/gfx/triangle.png');
   this.load.image('diamond', 'assets/gfx/diamond.png');
   this.load.image('tile', 'assets/gfx/tile.png');
+  this.load.image('selection', 'assets/gfx/selected.png');
 
 };
 
@@ -22,5 +23,6 @@ BootScene.prototype.create = function() {
   this.add.text(20, 20, 'Loading game...');
 
   this.scene.start('playGame');
+  this.scene.start('palette');
 
 };

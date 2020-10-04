@@ -11,6 +11,8 @@ PlayScene.prototype.constructor = PlayScene;
 
 PlayScene.prototype.create = function() {
 
+  this.cameras.main.setBounds(0, 0, 4000, 4000);
+
   this.customProps = {
     graphics: this.add.graphics({ lineStyle: { color: 0x00ff00 } }),
     circles: [],
@@ -30,8 +32,8 @@ PlayScene.prototype.create = function() {
 
   var tiles = {};
 
-  for (y = -1; y < 8; y++) {
-    for (x = -1; x < 8; x++) {
+  for (y = -1; y < Math.ceil(this.sys.game.scale.gameSize.width / 120); y++) {
+    for (x = -1; x < Math.ceil(this.sys.game.scale.gameSize.width / 120); x++) {
 
       addTile(this, tiles, x*120, y*120, 60, 60, 'square', 0);
 
@@ -46,58 +48,21 @@ PlayScene.prototype.create = function() {
     }
   }
 
-  var colors = [
-    0x000000,
-    0x222034,
-    0x45283c,
-    0x663931,
-    0x8f563b,
-    0xdf7126,
-    0xd9a066,
-    0xeec39a,
-    0xfbf236,
-    0x99e550,
-    0x6abe30,
-    0x37946e,
-    0x4b692f,
-    0x524b24,
-    0x323c39,
-    0x3f3f74,
-    0x306082,
-    0x5b6ee1,
-    0x639bff,
-    0x5fcde4,
-    0xcbdbfc,
-    0xffffff,
-    0x9badb7,
-    0x847e87,
-    0x696a6a,
-    0x595652,
-    0x76428a,
-    0xac3232,
-    0xd96763,
-    0xd77bba,
-    0x8f974a,
-    0x8a6f30
-  ];
 
-  function setTint(pointer) {
-      g_game.tint = this.custTint;
-  }
+  var controlConfig = {
+        camera: this.cameras.main,
+        left: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.A),
+        right: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.D),
+        up: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.W),
+        down: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.S),
+        zoomIn: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.Q),
+        zoomOut: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.E),
+        acceleration: 0.06,
+        drag: 0.0005,
+        maxSpeed: 1.0
+    };
 
-  for (var i = 0; i < colors.length; i++) {
-
-    x = this.sys.game.scale.gameSize.width - 24*(1 + i%2);
-    y = 16 + Math.floor(i / 2) * 20;
-
-    var tile = this.add.image(x, y, 'tile')
-      .setTint(colors[i])
-      .setInteractive()
-      .on('pointerdown', setTint);
-    tile.custTint = colors[i];
-
-  }
-
+    this.customProps.controls = new Phaser.Cameras.Controls.SmoothedKeyControl(controlConfig);
 
 };
 
@@ -119,5 +84,11 @@ var addTile = function(game, tiles, x, y, tileX, tileY, type, rotation) {
         this.setTint(g_game.tint);
     });
   }
+
+};
+
+PlayScene.prototype.update = function(time, delta) {
+
+  this.customProps.controls.update(delta);
 
 };
